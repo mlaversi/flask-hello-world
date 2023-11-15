@@ -7,20 +7,22 @@ app = Flask(__name__)
 def hello_world():
     return 'COUCOU, TRIPLE MONSTRE BROTHER' 
 
-# Création des données fictives
 data = {
     'Nom': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
     'Âge': [25, 30, 22, 35, 28]
 }
-
-# Création du DataFrame
 df = pd.DataFrame(data)
 
+# Endpoint pour retourner le DataFrame
 @app.route('/dataframe')
 def get_dataframe():
-    # Convertir le DataFrame en format JSON
-    dataframe_json = df.to_json(orient='records', default=str)
-    return jsonify({'dataframe': dataframe_json})
+    try:
+        # Convertir le DataFrame en format JSON en gérant les caractères Unicode
+        dataframe_json = df.to_json(orient='records', default=str)
+
+        return jsonify({'dataframe': dataframe_json})
+    except Exception as e:
+        return str(e), 500  # Retourne le message d'erreur et un code d'état 500
 
 @app.route('/upload', methods=['POST'])
 def upload_audio():
