@@ -10,7 +10,7 @@ def hello_world():
 # Création des données fictives
 data = {
     'Nom': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
-    'Âge': [25, 30, 22, 35, 28]
+    'Age': [25, 30, 22, 35, 28]
 }
 
 # Création du DataFrame
