@@ -19,8 +19,7 @@ df = pd.DataFrame(data)
 @app.route('/dataframe')
 def get_dataframe():
     # Convertir le DataFrame en format JSON
-    dataframe_json = df.to_json(orient='records')
-
+    dataframe_json = df.to_json(orient='records', default=str)
     return jsonify({'dataframe': dataframe_json})
 
 @app.route('/upload', methods=['POST'])
