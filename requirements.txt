@@ -1,5 +1,3 @@
 Flask
 Gunicorn
 pandas
-pydub
-speech_recognition
