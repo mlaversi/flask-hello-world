@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 import pandas as pd 
+from pydub import AudioSegment
+import speech_recognition as sr
 
 app = Flask(__name__)
 
@@ -22,6 +24,7 @@ def get_dataframe():
     dataframe_json = df.to_json(orient='records', default_handler=str)
     return jsonify({'dataframe': dataframe_json})
 
+
 @app.route('/upload', methods=['POST'])
 def upload_audio():
     if 'audio' not in request.files:
@@ -42,6 +45,25 @@ def upload_audio():
     response_data = {'transformed_audio': transformed_audio, 'metrics': metrics}
     
     return jsonify(response_data), 200
+
+@app.route('/testaudio', methods=['POST'])
+def get_audio_size():
+    try:
+        # Lisez les bytes de l'audio depuis la requête
+        audio_bytes = request.get_data()
+
+        # Obtenez la taille de l'audio (remplacez cette logique par votre propre logique)
+        audio_size = len(audio_bytes)
+
+        # Retournez la taille de l'audio au format JSON
+        return jsonify({'audioSize': audio_size})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 # For running the app locally
 if __name__ == '__main__':
