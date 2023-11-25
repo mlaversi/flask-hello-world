@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import pandas as pd 
-from pydub import AudioSegment
-import speech_recognition as sr
+
 
 app = Flask(__name__)
 
@@ -61,9 +60,6 @@ def get_audio_size():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 # For running the app locally
 if __name__ == '__main__':
