@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import pandas as pd 
+import speech_recognition as sr
 
 
 app = Flask(__name__)
@@ -46,21 +47,27 @@ def upload_audio():
     return jsonify(response_data), 200
 
 @app.route('/testaudio', methods=['POST'])
-def get_audio_size():
+def get_audio_text():
     try:
-        # Lisez les bytes de l'audio depuis la requête
+        # Lire les bytes de l'audio depuis la requête
         audio_bytes = request.get_data()
 
-        # Obtenez la taille de l'audio (remplacez cette logique par votre propre logique)
+        # Utiliser SpeechRecognition pour transcrire l'audio en texte
+        recognizer = sr.Recognizer()
+        audio = sr.AudioFile(sr.AudioData(audio_bytes, 44100, 2))
+
+        with audio as source:
+            audio_text = recognizer.record(source)
+
+        # Obtenir la taille de l'audio (remplacez cette logique par votre propre logique)
         audio_size = len(audio_bytes)
 
-        # Retournez la taille de l'audio au format JSON
-        return jsonify({'audioSize': audio_size , 'Number' : 13})
+        # Retourner la taille de l'audio et le texte transcrit au format JSON
+        return jsonify({'audioSize': audio_size, 'transcribedText': recognizer.recognize_google(audio_text)})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
+    
 # For running the app locally
 if __name__ == '__main__':
     app.run()
