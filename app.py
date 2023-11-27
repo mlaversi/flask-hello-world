@@ -55,7 +55,7 @@ def get_audio_size():
         audio_size = len(audio_bytes)
 
         # Retournez la taille de l'audio au format JSON
-        return jsonify({'audioSize': audio_size})
+        return jsonify({'audioSize': audio_size , 'Number' : 13})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
