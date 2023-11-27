@@ -1,4 +1,4 @@
 Flask
 Gunicorn
 pandas
-speech_recognition
+SpeechRecognition==3.8.1
