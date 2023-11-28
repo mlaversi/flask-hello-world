@@ -1,4 +1,4 @@
 Flask
 Gunicorn
 pandas
-SpeechRecognition==3.8.1
+google-cloud-speech==2.6.0

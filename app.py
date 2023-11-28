@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import pandas as pd 
-import speech_recognition as sr
+from google.cloud import speech_v1p1beta1 as speech
 
 
 app = Flask(__name__)
@@ -51,14 +51,24 @@ def get_audio_text():
         # Read audio bytes from the request
         audio_bytes = request.get_data()
 
-        # Initialize SpeechRecognition recognizer
-        recognizer = sr.Recognizer()
+        # Initialize Google Cloud Speech client
+        client = speech.SpeechClient()
 
-        # Convert audio bytes to AudioData
-        audio_data = sr.AudioData(audio_bytes, 44100, 2)  # Adjust sample rate and channels accordingly
+        # Create a recognition config
+        config = speech.RecognitionConfig(
+            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=44100,
+            language_code="en-US",
+        )
+
+        # Convert audio bytes to Audio data
+        audio = speech.RecognitionAudio(content=audio_bytes)
 
         # Perform speech recognition
-        text = recognizer.recognize_google(audio_data)
+        response = client.recognize(config=config, audio=audio)
+
+        # Extract transcribed text
+        text = response.results[0].alternatives[0].transcript
 
         # Get the size of the audio (replace this logic with your own logic)
         audio_size = len(audio_bytes)
