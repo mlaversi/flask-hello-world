@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import pandas as pd 
-from google.cloud import speech_v1p1beta1 as speech
 
 
 app = Flask(__name__)
@@ -45,39 +44,22 @@ def upload_audio():
     response_data = {'transformed_audio': transformed_audio, 'metrics': metrics}
     
     return jsonify(response_data), 200
+
 @app.route('/testaudio', methods=['POST'])
-def get_audio_text():
+def get_audio_size():
     try:
-        # Read audio bytes from the request
+        # Lisez les bytes de l'audio depuis la requête
         audio_bytes = request.get_data()
 
-        # Initialize Google Cloud Speech client
-        client = speech.SpeechClient()
-
-        # Create a recognition config
-        config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=44100,
-            language_code="en-US",
-        )
-
-        # Convert audio bytes to Audio data
-        audio = speech.RecognitionAudio(content=audio_bytes)
-
-        # Perform speech recognition
-        response = client.recognize(config=config, audio=audio)
-
-        # Extract transcribed text
-        text = response.results[0].alternatives[0].transcript
-
-        # Get the size of the audio (replace this logic with your own logic)
+        # Obtenez la taille de l'audio (remplacez cette logique par votre propre logique)
         audio_size = len(audio_bytes)
 
-        # Return the audio size and transcribed text in JSON format
-        return jsonify({'audioSize': audio_size, 'transcribedText': text})
+        # Retournez la taille de l'audio au format JSON
+        return jsonify({'audioSize': audio_size , 'Number' : 13})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 # For running the app locally
 if __name__ == '__main__':
