@@ -5,6 +5,7 @@ import io
 import random 
 import matplotlib.pyplot as plt
 import numpy as np
+import base64
 
 app = Flask(__name__)
 
@@ -44,12 +45,19 @@ def upload_and_analyze():
         plt.specgram(samples, Fs=audio.frame_rate)
 
         # Enregistrer le tracé dans un tableau en bytes
-        # img_buf = io.BytesIO()
-        # plt.savefig(img_buf, format='png')
-        # img_buf.seek(0)
+        img_buf = io.BytesIO()
+        plt.savefig(img_buf, format='png')
+        img_buf.seek(0)
+        
+        img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
 
-        # Retourner l'image sous forme d'un tableau en bytes
-        return jsonify({'spectrogram': samples})
+        plt.close()
+
+        # Ajouter des informations supplémentaires à la réponse JSON
+        return jsonify({'spectrogram': img_base64,
+                        'audioFrequency': audio.frame_rate,
+                        'audioDuration': len(audio) / 1000.0  # en secondes
+                        })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
