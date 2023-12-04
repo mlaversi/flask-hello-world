@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
 import pandas as pd 
+from pydub import AudioSegment
+import io
+import random 
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'COUCOU, TRIPLE MONSTRE BROTHER' 
+    return 'COUCOU, Quadruple MONSTRE BROTHER' 
 
 # Création des données fictives
 data = {
@@ -45,16 +48,25 @@ def upload_audio():
     return jsonify(response_data), 200
 
 @app.route('/testaudio', methods=['POST'])
-def get_audio_size():
+def get_audio_info():
     try:
-        # Lisez les bytes de l'audio depuis la requête
+        # Lire les bytes de l'audio depuis la requête
         audio_bytes = request.get_data()
 
-        # Obtenez la taille de l'audio (remplacez cette logique par votre propre logique)
+        # Convertir les bytes en un objet AudioSegment
+        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
+
+        # Obtenir la fréquence de l'audio
+        audio_frequency = audio.frame_rate
+
+        # Obtenir la taille de l'audio
         audio_size = len(audio_bytes)
 
-        # Retournez la taille de l'audio au format JSON
-        return jsonify({'audioSize': audio_size , 'Number' : 17})
+        # Générer un nombre aléatoire
+        random_number = random.randint(1, 100)
+
+        # Retourner les informations au format JSON
+        return jsonify({'audioFrequency': audio_frequency, 'audioSize': audio_size, 'randomNumber': random_number})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
