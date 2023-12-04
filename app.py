@@ -44,12 +44,12 @@ def upload_and_analyze():
         plt.specgram(samples, Fs=audio.frame_rate)
 
         # Enregistrer le tracé dans un tableau en bytes
-        img_buf = io.BytesIO()
-        plt.savefig(img_buf, format='png')
-        img_buf.seek(0)
+        # img_buf = io.BytesIO()
+        # plt.savefig(img_buf, format='png')
+        # img_buf.seek(0)
 
         # Retourner l'image sous forme d'un tableau en bytes
-        return jsonify({'spectrogram': img_buf.read().decode('latin1')})
+        return jsonify({'spectrogram': samples})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
