@@ -3,3 +3,5 @@ Gunicorn
 pandas
 google-cloud-speech==2.6.0
 pydub==0.25.1
+matplotlib==3.4.3
+numpy==1.21.2

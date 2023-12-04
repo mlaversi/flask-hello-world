@@ -3,6 +3,8 @@ import pandas as pd
 from pydub import AudioSegment
 import io
 import random 
+import matplotlib.pyplot as plt
+import numpy as np
 
 app = Flask(__name__)
 
@@ -27,25 +29,30 @@ def get_dataframe():
 
 
 @app.route('/upload', methods=['POST'])
-def upload_audio():
-    if 'audio' not in request.files:
-        return 'Aucun fichier audio dans la requête', 400
+def upload_and_analyze():
+    try:
+        # Lire les bytes de l'audio depuis la requête
+        audio_bytes = request.get_data()
 
-    audio_file = request.files['audio']
+        # Convertir les bytes en un objet AudioSegment
+        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
 
-    # Traitez le fichier audio ici selon vos besoins.
-    # Par exemple, vous pouvez le sauvegarder sur le serveur et effectuer des transformations.
+        # Obtenir les données pour l'analyse spectrale
+        samples = np.array(audio.get_array_of_samples())
 
-    # Simulons une transformation en ajoutant un préfixe au texte
-    transformed_audio = "Transformed: " + audio_file.read().decode('utf-8')
+        # Effectuer l'analyse spectrale (exemple : spectrogramme)
+        plt.specgram(samples, Fs=audio.frame_rate)
 
-    # Simulons des métriques
-    metrics = {'duration': 120, 'size': len(transformed_audio)}
+        # Enregistrer le tracé dans un tableau en bytes
+        img_buf = io.BytesIO()
+        plt.savefig(img_buf, format='png')
+        img_buf.seek(0)
 
-    # Retournez les données traitées à FlutterFlow
-    response_data = {'transformed_audio': transformed_audio, 'metrics': metrics}
-    
-    return jsonify(response_data), 200
+        # Retourner l'image sous forme d'un tableau en bytes
+        return jsonify({'spectrogram': img_buf.read().decode('latin1')})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/testaudio', methods=['POST'])
 def get_audio_info():
