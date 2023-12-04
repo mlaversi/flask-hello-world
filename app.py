@@ -43,6 +43,7 @@ def upload_and_analyze():
 
         # Effectuer l'analyse spectrale (exemple : spectrogramme)
         plt.specgram(samples, Fs=audio.frame_rate)
+        print(samples)
 
         # Enregistrer le tracé dans un tableau en bytes
         img_buf = io.BytesIO()
