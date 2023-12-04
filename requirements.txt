@@ -2,6 +2,5 @@ Flask
 Gunicorn
 pandas
 google-cloud-speech==2.6.0
-io
 random
 pydub==0.25.1
