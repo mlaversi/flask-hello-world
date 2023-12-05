@@ -1,11 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import pandas as pd 
 from pydub import AudioSegment
 import io
 import random 
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 import base64
+from utils import *
 
 app = Flask(__name__)
 
@@ -18,7 +20,6 @@ data = {
     'Nom': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
     'Age': [25, 30, 22, 35, 28]
 }
-
 # Création du DataFrame
 df = pd.DataFrame(data)
 
@@ -28,9 +29,10 @@ def get_dataframe():
     dataframe_json = df.to_json(orient='records', default_handler=str)
     return jsonify({'dataframe': dataframe_json})
 
+###IMAGES
 
-@app.route('/upload', methods=['POST'])
-def upload_and_analyze():
+@app.route('/testimages', methods=['POST'])
+def get_audio_info():
     try:
         # Lire les bytes de l'audio depuis la requête
         audio_bytes = request.get_data()
@@ -38,30 +40,20 @@ def upload_and_analyze():
         # Convertir les bytes en un objet AudioSegment
         audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
 
-        # Obtenir les données pour l'analyse spectrale
+        # Obtenir les échantillons et la durée
         samples = np.array(audio.get_array_of_samples())
+        duration = len(audio) / 1000.0  # Durée en secondes
 
-        # Effectuer l'analyse spectrale (exemple : spectrogramme)
-        plt.specgram(samples, Fs=audio.frame_rate)
-        print(samples)
+        # Générer le graphique audio
+        plot_bytes = generate_audio_plot(samples, duration)
 
-        # Enregistrer le tracé dans un tableau en bytes
-        img_buf = io.BytesIO()
-        plt.savefig(img_buf, format='png')
-        img_buf.seek(0)
-        
-        img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
-
-        plt.close()
-
-        # Ajouter des informations supplémentaires à la réponse JSON
-        return jsonify({'spectrogram': img_base64,
-                        'audioFrequency': audio.frame_rate,
-                        'audioDuration': len(audio) / 1000.0  # en secondes
-                        })
+        # Retourner l'image au format JPEG
+        return send_file(io.BytesIO(plot_bytes.getvalue()), mimetype='image/png')
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+### FREQUENCES, TAILLE, RANDOM NUMBER
 
 @app.route('/testaudio', methods=['POST'])
 def get_audio_info():
@@ -86,6 +78,7 @@ def get_audio_info():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 # For running the app locally
