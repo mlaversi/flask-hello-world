@@ -53,7 +53,7 @@ def get_audio_info():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-### FREQUENCES, TAILLE, RANDOM NUMBER
+### FREQUENCES, TAILLE, RANDOM Number
 
 @app.route('/testaudio', methods=['POST'])
 def get_audio_info():
