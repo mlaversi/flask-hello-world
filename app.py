@@ -8,6 +8,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 import base64
 from utils import *
+import zipfile
+
 
 app = Flask(__name__)
 
@@ -31,6 +33,7 @@ def get_dataframe():
 
 ###IMAGES
 
+
 @app.route('/testimages', methods=['POST'])
 def get_audio_images():
     try:
@@ -47,14 +50,19 @@ def get_audio_images():
         # Générer le graphique audio
         plot_bytes = generate_audio_plot(samples, duration)
 
-        # Retourner l'image au format JPEG
-        return send_file(io.BytesIO(plot_bytes.getvalue()), mimetype='image/png')
+        # Créer un fichier zip contenant l'image
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'a', zipfile.ZIP_DEFLATED) as zip_file:
+            zip_file.writestr('audio_plot.png', plot_bytes.getvalue())
+
+        # Retourner le fichier zip
+        zip_buffer.seek(0)
+        return send_file(zip_buffer, mimetype='application/zip', as_attachment=True, download_name='audio_plots.zip')
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 ### FREQUENCES, TAILLE, RANDOM Number
-
 @app.route('/testaudio', methods=['POST'])
 def get_audio_infos():
     try:
