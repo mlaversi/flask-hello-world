@@ -32,7 +32,7 @@ def get_dataframe():
 ###IMAGES
 
 @app.route('/testimages', methods=['POST'])
-def get_audio_info():
+def get_audio_images():
     try:
         # Lire les bytes de l'audio depuis la requête
         audio_bytes = request.get_data()
@@ -56,7 +56,7 @@ def get_audio_info():
 ### FREQUENCES, TAILLE, RANDOM Number
 
 @app.route('/testaudio', methods=['POST'])
-def get_audio_info():
+def get_audio_infos():
     try:
         # Lire les bytes de l'audio depuis la requête
         audio_bytes = request.get_data()
