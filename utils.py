@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
+import io
 # Second : 
 
 #Sortir métriques audio (intensité vis à vis des fréquences)
