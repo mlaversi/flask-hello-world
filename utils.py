@@ -3,10 +3,18 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 import io
+import openai 
 # Second : 
 
-#Sortir métriques audio (intensité vis à vis des fréquences)
-#Envoyer les fréquences
+#Métriques : Liau Coleman : 
+
+# def coleman_liau_index(text, language):
+#     response = openai.Completion.create(
+#         engine="text-davinci-003",  # Use 'text-davinci-003' for ChatGPT Turbo
+#         prompt=f"In {language}, please only give me the coleman liau index from the following text. The input text is: {text}",
+#         max_tokens=100
+#     )
+#     return response.choices[0].text 
 
 def generate_audio_plot(samples, duration):
     # Créer une figure avec deux sous-graphiques côte à côte
