@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 import io
-import openai 
+# import openai 
 # Second : 
 
 #Métriques : Liau Coleman : 
