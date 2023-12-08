@@ -87,38 +87,38 @@ def get_audio_infos():
         return jsonify({'error': str(e)}), 500
 
 
-### Images transformation. 
-def convert_to_black_and_white(image):
-    # Ouvrir l'image en utilisant la bibliothèque PIL
-    img = Image.open(BytesIO(image))
+# ### Images transformation. 
+# def convert_to_black_and_white(image):
+#     # Ouvrir l'image en utilisant la bibliothèque PIL
+#     img = Image.open(BytesIO(image))
 
-    # Convertir l'image en tableau numpy
-    img_array = np.array(img)
+#     # Convertir l'image en tableau numpy
+#     img_array = np.array(img)
 
-    # Appliquer la conversion en noir et blanc
-    img_bw = Image.fromarray(np.dot(img_array[..., :3], [0.299, 0.587, 0.114]).astype(np.uint8))
+#     # Appliquer la conversion en noir et blanc
+#     img_bw = Image.fromarray(np.dot(img_array[..., :3], [0.299, 0.587, 0.114]).astype(np.uint8))
 
-    # Convertir l'image en tableau de bytes
-    img_bytes = BytesIO()
-    img_bw.save(img_bytes, format="PNG")
-    img_bytes = img_bytes.getvalue()
+#     # Convertir l'image en tableau de bytes
+#     img_bytes = BytesIO()
+#     img_bw.save(img_bytes, format="PNG")
+#     img_bytes = img_bytes.getvalue()
 
-    return img_bytes
+#     return img_bytes
 
-@app.route('/transform', methods=['POST'])
-def transform_image():
-    try:
-        # Récupérer l'image depuis la requête POST
-        image = request.files['image'].read()
+# @app.route('/transform', methods=['POST'])
+# def transform_image():
+#     try:
+#         # Récupérer l'image depuis la requête POST
+#         image = request.files['image'].read()
 
-        # Appeler la fonction de conversion en noir et blanc
-        transformed_image = convert_to_black_and_white(image)
+#         # Appeler la fonction de conversion en noir et blanc
+#         transformed_image = convert_to_black_and_white(image)
 
-        # Retourner l'image transformée
-        return jsonify({'status': 'success', 'image': str(transformed_image)})
+#         # Retourner l'image transformée
+#         return jsonify({'status': 'success', 'image': str(transformed_image)})
 
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
+#     except Exception as e:
+#         return jsonify({'status': 'error', 'message': str(e)})
 
 # For running the app locally
 if __name__ == '__main__':
