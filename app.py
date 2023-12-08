@@ -10,7 +10,8 @@ from utils import *
 import zipfile
 from PIL import Image
 from io import BytesIO
-
+import librosa
+import speech_recognition as sr
 
 app = Flask(__name__)
 
@@ -85,6 +86,45 @@ def get_audio_infos():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+
+
+@app.route('/analyse-audio', methods=['POST'])
+def analyse_audio():
+    # Vérifier si un fichier audio est attaché à la requête
+    if 'audio' not in request.files:
+        return jsonify({'error': 'Aucun fichier audio attaché à la requête'}), 400
+
+    fichier_audio = request.files['audio']
+
+    # Vérifier si le fichier a une extension audio (ajuster selon vos besoins)
+    if not fichier_audio.filename.endswith(('.mp3', '.wav', '.ogg')):
+        return jsonify({'error': 'Le fichier doit être au format MP3, WAV ou OGG'}), 400
+
+    # Charger le fichier audio avec librosa
+    try:
+        audio, _ = librosa.load(fichier_audio, sr=None)
+    except Exception as e:
+        return jsonify({'error': f'Erreur lors du chargement du fichier audio : {str(e)}'}), 500
+
+    # Utiliser un module de reconnaissance vocale (SpeechRecognition)
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(fichier_audio) as source:
+        audio_data = recognizer.record(source)
+
+    # Convertir le texte à partir du fichier audio
+    try:
+        texte_reconnu = recognizer.recognize_google(audio_data, language='fr-FR')
+    except sr.UnknownValueError:
+        texte_reconnu = "Aucun texte n'a pu être reconnu"
+    except sr.RequestError as e:
+        texte_reconnu = f"Erreur lors de la demande de reconnaissance vocale : {str(e)}"
+
+    return jsonify({'texte_reconnu': texte_reconnu}), 200
+
+
+
 
 
 # ### Images transformation. 
