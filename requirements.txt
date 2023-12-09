@@ -7,4 +7,4 @@ matplotlib==3.4.3
 numpy==1.21.2
 SpeechRecognition==3.8.1
 librosa==0.8.1
-pocketsphinx==0.1.15
+pocketsphinx==5.0.2
