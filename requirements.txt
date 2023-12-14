@@ -4,4 +4,4 @@ pandas
 google-cloud-speech==2.6.0
 SpeechRecognition==3.8.1
 librosa==0.8.1
-pocketsphinx==5.0.2
+pocketsphinx==5.0.1
